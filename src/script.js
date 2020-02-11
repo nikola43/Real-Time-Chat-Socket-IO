@@ -52,7 +52,13 @@ $(document).ready(function () {
     joinChatButton.addEventListener('click', e => {
         e.preventDefault();
         // get username from input
-        const name = usernameInput.value;
+        const username = usernameInput.value;
+
+        // check if username are set
+        if (!username) {
+            alert('Username can not be empty');
+            return;
+        }
 
         // generate random color for new user
         messageBoxColor = "#" + ((1 << 24) * Math.random() | 0).toString(16);
@@ -68,7 +74,7 @@ $(document).ready(function () {
         appendMessage('You have joined', messageBoxColor);
 
         // emit new user event to server
-        socket.emit('new-user', name, messageBoxColor);
+        socket.emit('new-user', username, messageBoxColor);
     });
 
     // send message button listener
@@ -77,6 +83,11 @@ $(document).ready(function () {
 
         // getvalue from input
         const message = messageInput.value;
+
+        // check if message are set
+        if (!message) {
+            alert('Message can not be empty')
+        }
 
         // append message to chat box
         appendMessage(`You: ${message}`, messageBoxColor);
