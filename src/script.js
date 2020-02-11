@@ -1,10 +1,9 @@
 $(document).ready(function () {
-    let messageBoxColor = "#" + ((1 << 24) * Math.random() | 0).toString(16);
-    console.log("ready!");
-
+    // connect with socket
     const socket = io('http://localhost:3000');
+
+    // get dom elements
     const messageContainer = document.getElementById('message-container');
-    const messageForm = document.getElementById('send-container');
     const usernameInput = document.getElementById('username-input');
     const messageInputContainer = document.getElementById('message-input-container');
     const usernameInputContainer = document.getElementById('username-input-container');
@@ -12,65 +11,100 @@ $(document).ready(function () {
     const joinChatButton = document.getElementById('join-chat-button');
     const sendMessageButton = document.getElementById('send-message-button');
 
+    // variable for store user message background color
+    let messageBoxColor;
 
-    messageInputContainer.style.display = 'none';
-    messageInput.style.display = 'none';
-    messageContainer.style.display = 'none';
-    sendMessageButton.style.display = 'none';
+    // initially show join inputs and hide chat
+    showJoin(true);
+    showChat(false);
 
-    socket.on('chat-message', (messageData) => {
-        appendMessage(`${messageData.name}: ${messageData.message}`, messageData.color)
-    });
+    // listen socket events
+    listenSocket();
 
-    socket.on('user-connected', (messageData) => {
-        appendMessage(`${messageData.name} ha entrado a la sala`, messageData.color)
-    });
+    function showJoin(isVisible) {
+        usernameInputContainer.style.display = isVisible ? 'block' :'none';
+        usernameInput.style.display = isVisible ? 'block' :'none';
+        joinChatButton.style.display = isVisible ? 'block' :'none';
+    }
 
-    socket.on('user-disconnected', (messageData) => {
-        appendMessage(`${messageData.name} ha salido de la sala`, messageData.color)
-    });
+    function showChat(isVisible) {
+        messageInputContainer.style.display = isVisible ? 'block' :'none';
+        messageInput.style.display = isVisible ? 'block' :'none';
+        messageContainer.style.display = isVisible ? 'block' :'none';
+        sendMessageButton.style.display = isVisible ? 'block' :'none';
+    }
 
+    function listenSocket()  {
+        socket.on('chat-message', (messageData) => {
+            appendMessage(`${messageData.name}: ${messageData.message}`, messageData.color)
+        });
+
+        socket.on('user-connected', (messageData) => {
+            appendMessage(`${messageData.name} have joined to room`, messageData.color)
+        });
+
+        socket.on('user-disconnected', (messageData) => {
+            appendMessage(`${messageData.name} leave room`, messageData.color)
+        });
+    }
+
+    // join to room button listener
     joinChatButton.addEventListener('click', e => {
         e.preventDefault();
+        // get username from input
         const name = usernameInput.value;
 
-        usernameInputContainer.style.display = 'none';
-        usernameInput.style.display = 'none';
-        joinChatButton.style.display = 'none';
+        // generate random color for new user
+        messageBoxColor = "#" + ((1 << 24) * Math.random() | 0).toString(16);
 
-        messageInputContainer.style.display = 'block';
-        messageInput.style.display = 'block';
-        sendMessageButton.style.display = 'block';
-        messageContainer.style.display = 'block';
+        // hide join inputs and show chat
+        showJoin(false);
+        showChat(true);
+
+        // clear message container
         messageContainer.innerText = "";
 
-        appendMessage('Te has unido a la sala', messageBoxColor);
+        // append new user joined to chat box
+        appendMessage('You have joined', messageBoxColor);
+
+        // emit new user event to server
         socket.emit('new-user', name, messageBoxColor);
     });
 
+    // send message button listener
     sendMessageButton.addEventListener('click', e => {
         e.preventDefault();
+
+        // getvalue from input
         const message = messageInput.value;
-        appendMessage(`Tú: ${message}`, messageBoxColor);
+
+        // append message to chat box
+        appendMessage(`You: ${message}`, messageBoxColor);
+
+        // emit message event to server
         socket.emit('send-chat-message', message);
+
+        // finally clear message input value
         messageInput.value = '';
     });
 
     function appendMessage(message, color) {
+        // create dom elements
         const messageElement = document.createElement('div');
         const messageBody = document.createElement('p');
 
+        // set style
         messageElement.className = 'card mb-2 mt-2';
         messageBody.className = 'card-text mb-2 mt-2 ml-2 mr-2';
         messageBody.style.color = 'white';
-
         messageElement.style.backgroundColor = color;
 
+        // set received message to input value
         messageBody.innerText = message;
 
+        // append message
         messageElement.append(messageBody);
         messageContainer.append(messageElement)
     }
-
 });
 

@@ -21,59 +21,54 @@
     <!-- Montserrat google font -->
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
 
-
+    <!-- Scripts -->
     <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
     <script defer src="src/script.js"></script>
 </head>
 <body>
 
-<!-- Start your project here-->
 <div style="height: 100vh">
     <div class="flex-center flex-column animated fadeIn">
-      <!-- Card -->
-        <div id="message-container"></div>
-        <!-- Material auto-sizing form -->
+        <!-- Chat box -->
+        <div id="message-container">
+
+        </div>
+        <!-- Chat box -->
+
+        <!-- Index inputs -->
         <form id="send-container">
-            <!-- Grid row -->
             <div class="form-row align-items-center">
-
-                <!-- Grid column -->
+                <!-- Index inputs -->
                 <div class="col-auto" id="username-input-container">
-                    <!-- Material input -->
+                    <!-- Username input -->
                     <div class="md-form">
-                        <input type="text" id="username-input" class="username-input" placeholder="Nombre de usuario">
+                        <input type="text" id="username-input" class="username-input" placeholder="Username">
                     </div>
                 </div>
-                <!-- Grid column -->
 
-                <!-- Grid column -->
+                <!-- Join button -->
                 <div class="col-auto">
-                    <button id="join-chat-button" class="btn btn-primary mb-0">Entrar</button>
+                    <button id="join-chat-button" class="btn btn-primary mb-0">Join</button>
                 </div>
-                <!-- Grid column -->
+                <!-- Index inputs -->
 
-
-                <!-- Grid column -->
+                <!-- Chat inputs -->
                 <div class="col-auto" id="message-input-container">
-                    <!-- Material input -->
+                    <!-- Message input -->
                     <div class="md-form">
-                        <input type="text" id="message-input" class="username-input" placeholder="Mensaje">
+                        <input type="text" id="message-input" class="username-input" placeholder="Message">
                     </div>
                 </div>
-                <!-- Grid column -->
 
-                <!-- Grid column -->
+                <!-- Send message button -->
                 <div class="col-auto">
-                    <button id="send-message-button" class="btn btn-primary mb-0">Enviar</button>
+                    <button id="send-message-button" class="btn btn-primary mb-0">Send</button>
                 </div>
-                <!-- Grid column -->
+                <!-- Chat inputs -->
             </div>
-            <!-- Grid row -->
         </form>
-        <!-- Material auto-sizing form -->
     </div>
 </div>
-<!-- End your project here-->
 
 <!-- jQuery -->
 <script type="text/javascript" src="js/jquery.min.js"></script>
